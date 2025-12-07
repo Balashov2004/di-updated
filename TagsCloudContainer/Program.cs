@@ -9,7 +9,7 @@ public class Program
     public static void Main(string[] args)
     {
         var appSettings = new AppSettings(
-            outputPath: "./results/result5.png",
+            outputPath: "./results/result2.png",
             wordsFilePath: "./resurses/words2.txt")
         {
             ReaderType = ReaderType.FileTxt,
