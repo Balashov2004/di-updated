@@ -14,7 +14,6 @@ public class AppSettings
     private readonly int defaultMaxFontSize = 48;
     private readonly int defaultPadding = 2;
     private readonly double defaultSpiralDensity = 0.1;
-    private readonly string defaultImageFormat = "jpg";
     private readonly string defaultOutputPath = "./results/result.png";
     private readonly string defaultWordsFilePath = "./resurses/Words.txt";
     private readonly Color defaultBackgroundColor = Color.White;
