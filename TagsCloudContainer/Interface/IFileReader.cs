@@ -2,5 +2,5 @@
 
 public interface IFileReader
 {
-    string ReadAllText(string path);
+    string ReadAllText(string filePath);
 }

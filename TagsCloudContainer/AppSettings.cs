@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
-using Pure.DI;
-using TagsCloudVisualization.Interface;
+
 
 namespace TagsCloudContainer;
 public enum GeneratorType { Spiral }
@@ -8,60 +7,19 @@ public enum ReaderType { FileTxt }
 
 public class AppSettings
 {
-    private readonly Size defaultImageSize = new Size(1500, 1500);
-    private readonly string defaultFontNameValue = "Times New Roman";
-    private readonly int defaultMinFontSize = 10;
-    private readonly int defaultMaxFontSize = 48;
-    private readonly int defaultPadding = 2;
-    private readonly double defaultSpiralDensity = 0.1;
-    private readonly string defaultOutputPath = "./results/result.png";
-    private readonly string defaultWordsFilePath = "./resurses/Words.txt";
-    private readonly Color defaultBackgroundColor = Color.White;
-    private readonly Color defaultWordColor = Color.BurlyWood;
-    private readonly Color defaultContourColor = Color.Black;
-    private readonly double defaultAngle = 1;
-    
-    
-    public AppSettings(
-        Size? imageSize = null,
-        string? defaultFontName = null,
-        int? minFontSize = null,
-        int? maxFontSize = null,
-        int? padding = null,
-        double? spiralDensity = null,
-        string? outputPath = null,
-        string? wordsFilePath = null,
-        Color? backgroundColor = null,
-        Color? wordColors = null,
-        Color? contourColor = null,
-        double? angle = null)
-    {
-        ImageSize = imageSize ?? defaultImageSize;
-        DefaultFontName = defaultFontName ?? defaultFontNameValue;
-        MinFontSize = minFontSize ?? defaultMinFontSize;
-        MaxFontSize = maxFontSize ?? defaultMaxFontSize;
-        Padding = padding ?? defaultPadding;
-        SpiralDensity = spiralDensity ?? defaultSpiralDensity;
-        OutputPath = outputPath ?? defaultOutputPath;
-        WordsFilePath = wordsFilePath ?? defaultWordsFilePath;
-        BackgroundColor = backgroundColor ?? defaultBackgroundColor;
-        WordColor = wordColors ?? defaultWordColor;
-        ContourColor = contourColor ?? defaultContourColor;
-        Angle = angle ?? defaultAngle;
-    }
-    
-    public Size ImageSize { get; }
-    public string DefaultFontName { get; }
-    public int MinFontSize { get; }
-    public int MaxFontSize { get; }
-    public int Padding { get; }
-    public double SpiralDensity { get; }
-    public string OutputPath { get; }
-    public string WordsFilePath { get; }
-    public Color BackgroundColor { get; }
-    public Color WordColor { get; }
-    public Color ContourColor { get; }
-    public double Angle { get; }
-    public GeneratorType PointGeneratorType { get; set; }
-    public ReaderType ReaderType { get; set; }
+    public Size ImageSize { get; set; } = new Size(1500, 1500);
+    public string DefaultFontName { get; set; } = "Times New Roman";
+    public int MinFontSize { get; set; } = 10;
+    public int MaxFontSize { get; set; } = 48;
+    public int Padding { get; set; } = 2;
+    public double SpiralDensity { get; set; } = 0.1;
+    public string OutputPath { get; set; } = "./results/result.png";
+    public string WordsFilePath { get; set; } = "./resurses/Words.txt";
+    public Color BackgroundColor { get; set; } = Color.White;
+    public Color WordColor { get; set; } = Color.BurlyWood;
+    public Color ContourColor { get; set; } = Color.Black;
+    public double Angle { get; set; } = 1.0;
+    public GeneratorType PointGeneratorType { get; set; } = GeneratorType.Spiral;
+    public ReaderType ReaderType { get; set; } = ReaderType.FileTxt;
+    public List<string> Languages { get; set; } = new() { "ru" };
 }

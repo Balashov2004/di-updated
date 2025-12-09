@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿
 using Autofac;
 using TagsCloudContainer;
 using TagsCloudVisualization;
@@ -8,10 +8,10 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var appSettings = new AppSettings(
-            outputPath: "./results/result2.png",
-            wordsFilePath: "./resurses/words2.txt")
+        var appSettings = new AppSettings
         {
+            OutputPath = "./results/result5.png",
+            WordsFilePath = "./resurses/words3.txt",
             ReaderType = ReaderType.FileTxt,
             PointGeneratorType = GeneratorType.Spiral
         };

@@ -1,23 +1,19 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using TagsCloudContainer;
+
 
 namespace TagsCloudContainer;
 
-public class CreateCloud
+public class CloudPainter
 {
-    private readonly List<Rectangle> rectangles;
     private readonly AppSettings? appSettings;
-    private readonly List<WordData> wordDataList;
     
-    public CreateCloud(List<Rectangle> rectangles, AppSettings appSettings, List<WordData> wordDataList)
+    public CloudPainter(AppSettings appSettings)
     {
-        this.rectangles = rectangles;
         this.appSettings = appSettings;
-        this.wordDataList = wordDataList;
     }
 
-    public Bitmap DrawCloud()
+    private Bitmap DrawCloud(List<WordData> placedWords)
     {
         var bitmap = new Bitmap(appSettings.ImageSize.Width, appSettings.ImageSize.Height);
         using var graphics = Graphics.FromImage(bitmap);
@@ -26,20 +22,20 @@ public class CreateCloud
     
         graphics.Clear(appSettings.BackgroundColor);
 
-        for (int i = 0; i < rectangles.Count; i++)
+        foreach (var data in placedWords)
         {
-            var rect = rectangles[i];
-            var data = wordDataList[i];
+            var rect = data.Placement; 
+            
             graphics.DrawString(data.Word, data.WordFont, wordBrush, rect.Location);
-            graphics.DrawRectangle(contourPen, rect);
+            graphics.DrawRectangle(contourPen, rect); 
         }
     
         return bitmap;
     }
     
-    public void SaveImage(string path, ImageFormat format)
+    public void SaveImage(List<WordData> placesWords, string path, ImageFormat format)
     {
-        using var bitmap = DrawCloud();
+        using var bitmap = DrawCloud(placesWords);
         bitmap.Save(path, format);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Text.RegularExpressions;
-using TagsCloudContainer;
+using WeCantSpell.Hunspell;
 using TagsCloudVisualization.Interface;
 
 namespace TagsCloudContainer;
@@ -9,45 +9,38 @@ public class TextProcessor
 {
     private readonly AppSettings appSettings;
     public List<WordData> ProcessWords { get; private set; } = new List<WordData>();
-    public Dictionary<string, int> wordCounts = new Dictionary<string, int>();
-    private readonly IFileReader fileReader;
-    private int maxCount;
-    private int minCount;
 
-    public TextProcessor(AppSettings appSettings, IFileReader fileReader)
+    public TextProcessor(AppSettings appSettings)
     {
         this.appSettings = appSettings;
-        this.fileReader = fileReader;
     }
 
-    public void Process()
+    public void Process(string text)
     {
-        GetWords(appSettings.WordsFilePath);
-        foreach (var pair  in wordCounts)
+        var stats = GetWordStat(text);
+        var max = stats.MaxCount;
+        var min = stats.MinCount;
+        foreach (var pair in stats.WordCounts)
         {
-            ProcessWords.Add(CreateWordData(pair.Key, pair.Value));
+            ProcessWords.Add(CreateWordData(pair.Key, pair.Value, min, max));
         }
     }
 
-    private void GetWords(string path)
+    private WordStat GetWordStat(string text)
     {
-        var text = fileReader.ReadAllText(path);
-        const string delimitersPattern = @"\s*,\s*|\s*[\/\n]\s*|\s+";
+        const string delimitersPattern = @"[\W_]+";
         var words = Regex.Split(text, delimitersPattern, RegexOptions.IgnoreCase)
             .Where(w => !string.IsNullOrWhiteSpace(w))
-            .Select(w => w.ToLowerInvariant());
-
-        foreach (var word in words)
-        {
-            if (!wordCounts.ContainsKey(word))
-                wordCounts.Add(word, 0);
-            wordCounts[word]++;
-        }
-        maxCount = wordCounts.Values.Max();
-        minCount = wordCounts.Values.Min();
+            .Select(w => w.ToLowerInvariant())
+            .GroupBy(w => w)
+            .ToDictionary(g => g.Key, g => g.Count());
+        
+        var maxCount = words.Values.DefaultIfEmpty(0).Max();
+        var minCount = words.Values.DefaultIfEmpty(0).Min();
+        return new WordStat(words, maxCount, minCount);
     }
     
-    private WordData CreateWordData(string word, int count)
+    private WordData CreateWordData(string word, int count, int minCount,  int maxCount)
     {
         var spread = maxCount - minCount;
         var normalize = spread == 0 ? 0.5 : (double)(count - minCount) / spread;
@@ -71,4 +64,5 @@ public class TextProcessor
         
         return new Size((int)Math.Ceiling(sizeF.Width), (int)Math.Ceiling(sizeF.Height));
     }
+    
 }
