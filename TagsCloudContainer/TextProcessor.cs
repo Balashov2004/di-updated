@@ -49,20 +49,25 @@ public class TextProcessor
                                        (appSettings.MaxFontSize - appSettings.MinFontSize)
                                        * normalize);
         
-        var wordFont = new Font(appSettings.DefaultFontName, fontSize);
-        var size = MeasureWordSize(word, wordFont);
+        var size = MeasureWordSize(word, fontSize);
         
-        return new WordData(word, wordFont, size);
+        return new WordData(word, fontSize, size);
     }
 
-    private Size MeasureWordSize(string word, Font font)
+    private Size MeasureWordSize(string word, int fontSize)
     {
+        using var font = new Font(appSettings.FontName, fontSize);
         using var tempBitmap = new Bitmap(1, 1);
         using var graphics = Graphics.FromImage(tempBitmap);
+
         graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+        
         var sizeF = graphics.MeasureString(word, font);
         
-        return new Size((int)Math.Ceiling(sizeF.Width), (int)Math.Ceiling(sizeF.Height));
+        return new Size(
+            (int)Math.Ceiling(sizeF.Width),
+            (int)Math.Ceiling(sizeF.Height)
+        );
     }
     
 }

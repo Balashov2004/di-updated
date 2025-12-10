@@ -8,7 +8,7 @@ public enum ReaderType { FileTxt }
 public class AppSettings
 {
     public Size ImageSize { get; set; } = new Size(1500, 1500);
-    public string DefaultFontName { get; set; } = "Times New Roman";
+    public string FontName { get; set; } = "Times New Roman";
     public int MinFontSize { get; set; } = 10;
     public int MaxFontSize { get; set; } = 48;
     public int Padding { get; set; } = 2;

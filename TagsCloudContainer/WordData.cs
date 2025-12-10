@@ -6,15 +6,15 @@ namespace TagsCloudContainer;
 public class WordData
 {
     public string Word { get; }
-    public Font WordFont { get; }
+    public int FontSize { get; }
     public Size Size { get; }
     
     public Rectangle Placement { get; private set; }
     
-    public WordData(string word, Font font, Size size)
+    public WordData(string word, int fontSize, Size size)
     {
         Word = word;
-        WordFont = font;
+        FontSize = fontSize;
         Size = size;
         Placement = new Rectangle(Point.Empty, size);
     }

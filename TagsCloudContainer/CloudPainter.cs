@@ -25,8 +25,8 @@ public class CloudPainter
         foreach (var data in placedWords)
         {
             var rect = data.Placement; 
-            
-            graphics.DrawString(data.Word, data.WordFont, wordBrush, rect.Location);
+            using var font = new Font(appSettings.FontName, data.FontSize);
+            graphics.DrawString(data.Word, font, wordBrush, rect.Location);
             graphics.DrawRectangle(contourPen, rect); 
         }
     
