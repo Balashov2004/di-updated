@@ -18,6 +18,7 @@ public class CompositionRoot : Module
         builder.RegisterType<CloudRunner>().AsSelf();
         builder.RegisterType<TxtFileReader>().Keyed<IFileReader>(".txt");
         builder.RegisterType<FileCoordinator>().As<IFileReader>();
+        builder.RegisterType<WordsFilter>().SingleInstance();
         
         builder.Register<SpiralPointGenerator>(ctx =>
         {

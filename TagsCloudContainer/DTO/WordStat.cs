@@ -1,4 +1,4 @@
-﻿namespace TagsCloudContainer;
+﻿namespace TagsCloudContainer.DTO;
 
 public class WordStat
 {

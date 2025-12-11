@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Text.RegularExpressions;
-using WeCantSpell.Hunspell;
-using TagsCloudVisualization.Interface;
+using TagsCloudContainer.DTO;
+
 
 namespace TagsCloudContainer;
 
@@ -9,10 +9,12 @@ public class TextProcessor
 {
     private readonly AppSettings appSettings;
     public List<WordData> ProcessWords { get; private set; } = new List<WordData>();
+    private readonly WordsFilter wordsFilter;
 
-    public TextProcessor(AppSettings appSettings)
+    public TextProcessor(AppSettings appSettings, WordsFilter wordsFilter)
     {
         this.appSettings = appSettings;
+        this.wordsFilter = wordsFilter;
     }
 
     public void Process(string text)
@@ -32,12 +34,15 @@ public class TextProcessor
         var words = Regex.Split(text, delimitersPattern, RegexOptions.IgnoreCase)
             .Where(w => !string.IsNullOrWhiteSpace(w))
             .Select(w => w.ToLowerInvariant())
+            .ToList();
+        var afterFilterWords = wordsFilter.ApplyFilter(words);
+        
+        var wordCounts = afterFilterWords
             .GroupBy(w => w)
             .ToDictionary(g => g.Key, g => g.Count());
-        
-        var maxCount = words.Values.DefaultIfEmpty(0).Max();
-        var minCount = words.Values.DefaultIfEmpty(0).Min();
-        return new WordStat(words, maxCount, minCount);
+        var maxCount = wordCounts.Values.DefaultIfEmpty(0).Max();
+        var minCount = wordCounts.Values.DefaultIfEmpty(0).Min();
+        return new WordStat(wordCounts, maxCount, minCount);
     }
     
     private WordData CreateWordData(string word, int count, int minCount,  int maxCount)

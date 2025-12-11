@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using TagsCloudVisualization.Interface;
 
-namespace TagsCloudContainer;
+namespace TagsCloudContainer.DTO;
 
 public class WordData
 {
