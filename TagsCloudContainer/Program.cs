@@ -11,7 +11,7 @@ public class Program
         var appSettings = new AppSettings
         {
             OutputPath = "./results/result5.png",
-            WordsFilePath = "./resources/words3.txt",
+            WordsFilePath = "./resources/docx.docx",
             ReaderType = ReaderType.FileTxt,
             PointGeneratorType = GeneratorType.Spiral
         };

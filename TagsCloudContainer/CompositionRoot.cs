@@ -17,6 +17,7 @@ public class CompositionRoot : Module
         builder.RegisterType<CloudPainter>().AsSelf();
         builder.RegisterType<CloudRunner>().AsSelf();
         builder.RegisterType<TxtFileReader>().Keyed<IFileReader>(".txt");
+        builder.RegisterType<DocxFileReader>().Keyed<IFileReader>(".docx");
         builder.RegisterType<FileCoordinator>().As<IFileReader>();
         builder.RegisterType<WordsFilter>().SingleInstance();
         

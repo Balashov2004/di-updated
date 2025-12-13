@@ -21,6 +21,8 @@ public class AppSettings
     public double Angle { get; set; } = 1.0;
     public GeneratorType PointGeneratorType { get; set; } = GeneratorType.Spiral;
     public ReaderType ReaderType { get; set; } = ReaderType.FileTxt;
-    public List<string> Languages { get; set; } = new() { "ru" };
-    public List<string> ExcludePartsSpeech { get; set; } = new List<string> { "PR", "CONJ", "PART", "INT" };
+    public List<string> ExcludePartsSpeech { get; set; } = new List<string> 
+    { 
+        "PR", "CONJ", "PART", "SPRO", "APRO", "ADVPRO", "INTJ", "ADVB", "NUM"
+    };
 }

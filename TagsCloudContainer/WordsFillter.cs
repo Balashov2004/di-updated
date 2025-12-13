@@ -9,13 +9,11 @@ namespace TagsCloudContainer;
 public class WordsFilter
 {
     private const string MystemPath = "./resources/mystem.exe";
-    public List<string> ExcludePartsSpeech { get; set; } = new List<string> 
-    { 
-        "PR", "CONJ", "PART", "SPRO", "APRO", "ADVPRO", "INTJ", "ADVB", "NUM"
-    };
+    private readonly AppSettings settings;
     
-    public WordsFilter()
+    public WordsFilter(AppSettings settings)
     {
+        this.settings = settings;
         if (!File.Exists(MystemPath))
         {
             throw new FileNotFoundException($"Не найден Mystem. Проверьте путь: {MystemPath}");
@@ -84,7 +82,7 @@ public class WordsFilter
         var fullTag = analysis.Grammar.ToUpperInvariant();
         var cleanTag = fullTag.Split(new char[] { '=' }, 2).First().Trim();
         var po = cleanTag.Split(new char[] { ',', '|' }, 2).First().Trim();
-        var isBoring = ExcludePartsSpeech.Contains(po);
+        var isBoring = settings.ExcludePartsSpeech.Contains(po);
         return isBoring;
     }
     
