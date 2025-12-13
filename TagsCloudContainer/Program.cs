@@ -12,7 +12,6 @@ public class Program
         {
             OutputPath = "./results/result5.png",
             WordsFilePath = "./resources/docx.docx",
-            ReaderType = ReaderType.FileTxt,
             PointGeneratorType = GeneratorType.Spiral
         };
         var builder = new ContainerBuilder();

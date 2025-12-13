@@ -3,7 +3,6 @@
 
 namespace TagsCloudContainer;
 public enum GeneratorType { Spiral }
-public enum ReaderType { FileTxt }
 
 public class AppSettings
 {
@@ -20,7 +19,6 @@ public class AppSettings
     public Color ContourColor { get; set; } = Color.Black;
     public double Angle { get; set; } = 1.0;
     public GeneratorType PointGeneratorType { get; set; } = GeneratorType.Spiral;
-    public ReaderType ReaderType { get; set; } = ReaderType.FileTxt;
     public List<string> ExcludePartsSpeech { get; set; } = new List<string> 
     { 
         "PR", "CONJ", "PART", "SPRO", "APRO", "ADVPRO", "INTJ", "ADVB", "NUM"
