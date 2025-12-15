@@ -11,7 +11,7 @@ public class Program
         var appSettings = new AppSettings
         {
             OutputPath = "./results/result5.png",
-            WordsFilePath = "./resources/docx.docx",
+            WordsFilePath = "./resources/words2.txt",
             PointGeneratorType = GeneratorType.Spiral
         };
         var builder = new ContainerBuilder();

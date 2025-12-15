@@ -13,7 +13,8 @@ public class SpiralPointGeneratorTests
     [SetUp]
     public void SetUp()
     {
-        defaultSettings = new AppSettings(spiralDensity: 0.01); 
+        defaultSettings = new AppSettings();
+        defaultSettings.SpiralDensity = 0.01;
         spiral = new SpiralPointGenerator(center, defaultSettings.SpiralDensity, 1);
     }
     

@@ -17,7 +17,9 @@ public class CircularCloudLayouterTests
     public void SetUp()
     {
         center = new Point(500, 500);
-        defaultSettings = new AppSettings(padding: 0, imageSize: new Size(1000, 1000));
+        defaultSettings = new AppSettings();
+        defaultSettings.Padding = 0;
+        defaultSettings.ImageSize = new Size(1000, 1000);
     }
 
 
@@ -44,7 +46,8 @@ public class CircularCloudLayouterTests
     [Test]
     public void PutNextRectangle_NoIntersection_Test()
     {
-        var settingsWithPadding = new AppSettings(padding: 5);
+        var settingsWithPadding = new AppSettings();
+        settingsWithPadding.Padding = 5;
         var generator = new SpiralPointGenerator(center, settingsWithPadding.SpiralDensity, 1);
         var fakeGenerator = A.Fake<IPointGenerator>();
         A.CallTo(() => fakeGenerator.GeneratePoints()).Returns(generator.GeneratePoints());
@@ -81,12 +84,10 @@ public class CircularCloudLayouterTests
     public void RectangleNotFit_Test()
     {
         var imageSize = new Size(100, 100);
-        var appSettings = new AppSettings(
-            imageSize: imageSize,
-            maxFontSize: 10,
-            padding: 0,
-            spiralDensity: 0.01
-        );
+        var appSettings = new AppSettings(  );
+        appSettings.ImageSize = imageSize;
+        appSettings.MaxFontSize = 10;
+        appSettings.SpiralDensity = 0.01;
         var center = new Point(50, 50);
         var density = 5.0;
         var angleStep = 0.1;

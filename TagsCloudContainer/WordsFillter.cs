@@ -78,7 +78,16 @@ public class WordsFilter
 
     private bool IsBoring(string word, TextMystem mystemWord)
     {
+        if (mystemWord?.WordAnalyses == null || 
+            mystemWord.WordAnalyses.Count == 0)
+        {
+            return false; 
+        }
         var analysis = mystemWord.WordAnalyses[0];
+        if (string.IsNullOrEmpty(analysis.Grammar))
+        {
+            return false;
+        }
         var fullTag = analysis.Grammar.ToUpperInvariant();
         var cleanTag = fullTag.Split(new char[] { '=' }, 2).First().Trim();
         var po = cleanTag.Split(new char[] { ',', '|' }, 2).First().Trim();
