@@ -6,49 +6,58 @@ namespace TagsCloudVisualizationTests;
 
 public class TextProcessorTests
 {
+    private IWordsFilter fakeFilter;
+    private IFileReader fakeReader;
+    private AppSettings settings;
+
+    [SetUp]
+    public void SetUp()
+    {
+        settings = new AppSettings
+        {
+            MinFontSize = 10,
+            MaxFontSize = 20
+        };
+        
+        fakeFilter = A.Fake<IWordsFilter>();
+        fakeReader = A.Fake<IFileReader>();
+        A.CallTo(() => fakeFilter.ApplyFilter(A<List<string>>.Ignored))
+            .ReturnsLazily((List<string> rawWords) => 
+                rawWords.Select(w => w.ToLowerInvariant()).ToList()
+            );
+    }
     
     [Test]
     public void Process_CalculatesCorrectFontSize_BasedOnFrequency()
     {
-        var settings = new AppSettings(
-            minFontSize: 10, 
-            maxFontSize: 20
-        );
         var fakeFileContent = "cat cat cat dog dog apple";
-        var fakeReader = A.Fake<IFileReader>();
         A.CallTo(() => fakeReader.ReadAllText(A<string>.Ignored)).Returns(fakeFileContent);
-        var processor = new TextProcessor(settings, fakeReader);
+        var processor = new TextProcessor(settings, fakeFilter);
+        processor.Process(fakeFileContent);
         
-        processor.Process();
         var catData = processor.ProcessWords.Single(w => w.Word.Equals("cat"));
         var dogData = processor.ProcessWords.Single(w => w.Word.Equals("dog"));
         var appleData = processor.ProcessWords.Single(w => w.Word.Equals("apple"));
         
-        Assert.That(appleData.WordFont.Size, Is.EqualTo(10));
-        Assert.That(dogData.WordFont.Size, Is.EqualTo(15));
-        Assert.That(catData.WordFont.Size, Is.EqualTo(20));
+        Assert.That(appleData.FontSize, Is.EqualTo(10));
+        Assert.That(dogData.FontSize, Is.EqualTo(15));
+        Assert.That(catData.FontSize, Is.EqualTo(20));
     }
 
     [Test]
-    public void Process_CalculatesCorrectFontSize_WhenDameDensity()
+    public void Process_CalculatesCorrectFontSize_WhenSameFrequency()
     {
-        var settings = new AppSettings(
-            minFontSize: 10, 
-            maxFontSize: 20
-        );
         var fakeFileContent = "cat dog apple";
-        var fakeReader = A.Fake<IFileReader>();
         A.CallTo(() => fakeReader.ReadAllText(A<string>.Ignored)).Returns(fakeFileContent);
-        var processor = new TextProcessor(settings, fakeReader);
+        var processor = new TextProcessor(settings, fakeFilter);
+        processor.Process(fakeFileContent);
         
-        processor.Process();
         var catData = processor.ProcessWords.Single(w => w.Word.Equals("cat"));
         var dogData = processor.ProcessWords.Single(w => w.Word.Equals("dog"));
         var appleData = processor.ProcessWords.Single(w => w.Word.Equals("apple"));
         
-        Assert.That(appleData.WordFont.Size, Is.EqualTo(15));
-        Assert.That(dogData.WordFont.Size, Is.EqualTo(15));
-        Assert.That(catData.WordFont.Size, Is.EqualTo(15));
+        Assert.That(appleData.FontSize, Is.EqualTo(15));
+        Assert.That(dogData.FontSize, Is.EqualTo(15));
+        Assert.That(catData.FontSize, Is.EqualTo(15));
     }
-    
 }

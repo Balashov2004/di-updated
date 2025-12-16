@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Text.RegularExpressions;
 using TagsCloudContainer.DTO;
+using TagsCloudVisualization.Interface;
 
 
 namespace TagsCloudContainer;
@@ -9,9 +10,9 @@ public class TextProcessor
 {
     private readonly AppSettings appSettings;
     public List<WordData> ProcessWords { get; private set; } = new List<WordData>();
-    private readonly WordsFilter wordsFilter;
+    private readonly IWordsFilter wordsFilter;
 
-    public TextProcessor(AppSettings appSettings, WordsFilter wordsFilter)
+    public TextProcessor(AppSettings appSettings, IWordsFilter wordsFilter)
     {
         this.appSettings = appSettings;
         this.wordsFilter = wordsFilter;

@@ -2,11 +2,12 @@
 using System.Text;
 using System.Text.Json;
 using TagsCloudContainer.DTO;
+using TagsCloudVisualization.Interface;
 
 
 namespace TagsCloudContainer;
 
-public class WordsFilter
+public class WordsFilter : IWordsFilter
 {
     private const string MystemPath = "./resources/mystem.exe";
     private readonly AppSettings settings;
