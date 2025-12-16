@@ -9,7 +9,7 @@ public class SpiralPointGenerator : IPointGenerator
 {
     private readonly Point center;
     private readonly double density;
-    private double angle = 0;
+    private double angle;
     private readonly double angleStep;
     
     public Point Center => center;
@@ -19,6 +19,7 @@ public class SpiralPointGenerator : IPointGenerator
         this.center = center;
         this.density = density;
         this.angleStep = stepAngle;
+        this.angle = 0;
     }
     
     public IEnumerable<Point> GeneratePoints()

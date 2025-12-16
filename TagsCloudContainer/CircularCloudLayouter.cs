@@ -11,12 +11,15 @@ public class CircularCloudLayouter
     private readonly Dictionary<Point, List<Rectangle>> grid = new Dictionary<Point, List<Rectangle>>();
     private readonly int gridSize;
     public List<Rectangle> PlacedRectangles => placedRectangles;
+    
 
     public CircularCloudLayouter(AppSettings appSettings,  IPointGenerator pointGenerator)
     {
         this.appSettings = appSettings;
         this.pointGenerator = pointGenerator;
         gridSize = appSettings.MaxFontSize;
+        placedRectangles.Clear();
+        grid.Clear();
     }
 
     public Rectangle PutNextRectangle(Size rectangleSize)

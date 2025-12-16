@@ -11,7 +11,7 @@ public class CompositionRoot : Module
     protected override void Load(ContainerBuilder builder)
     {
 
-        builder.RegisterType<AppSettings>().SingleInstance();
+        builder.RegisterType<AppSettings>().AsSelf();
         builder.RegisterType<CircularCloudLayouter>().AsSelf();
         builder.RegisterType<TextProcessor>().AsSelf();
         builder.RegisterType<CloudPainter>().AsSelf();
