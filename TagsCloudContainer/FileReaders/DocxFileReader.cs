@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 
 using TagsCloudVisualization.Interface;
 
-namespace TagsCloudContainer.WorkWithFiles;
+namespace TagsCloudContainer.FileReaders;
 
 public class DocxFileReader : IFileReader
 {

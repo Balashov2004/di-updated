@@ -27,17 +27,17 @@ public class WordsFilter : IWordsFilter
         var mystemResult = RunMystem(inputWords);
         var analysisList = ParseMystemOutput(mystemResult);
         var filteredWords = words
-            .Where((word, index) => 
-            {
-                if (index < analysisList.Count)
-                {
-                    return !IsBoring(word, analysisList[index]);
-                }
-                return true;
-            })
+            .Where((word, index) => ShouldKeepWord(index, analysisList))
             .ToList();
         
         return filteredWords;
+    }
+    private bool ShouldKeepWord(int index, List<TextMystem> analysisList)
+    {
+        if (index >= analysisList.Count)
+            return true;
+
+        return !IsBoring(analysisList[index]);
     }
 
     private string RunMystem(string input)
@@ -77,7 +77,7 @@ public class WordsFilter : IWordsFilter
         return result ?? new List<TextMystem>();
     }
 
-    private bool IsBoring(string word, TextMystem mystemWord)
+    private bool IsBoring(TextMystem mystemWord)
     {
         if (mystemWord?.WordAnalyses == null || 
             mystemWord.WordAnalyses.Count == 0)

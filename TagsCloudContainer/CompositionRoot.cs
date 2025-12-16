@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using System.Drawing;
 using TagsCloudContainer;
-using TagsCloudContainer.WorkWithFiles;
+using TagsCloudContainer.FileReaders;
 using TagsCloudVisualization.Interface;
 
 namespace TagsCloudVisualization;
@@ -19,7 +19,7 @@ public class CompositionRoot : Module
         builder.RegisterType<TxtFileReader>().Keyed<IFileReader>(".txt");
         builder.RegisterType<DocxFileReader>().Keyed<IFileReader>(".docx");
         builder.RegisterType<FileCoordinator>().As<IFileReader>();
-        builder.RegisterType<WordsFilter>().SingleInstance();
+        builder.RegisterType<WordsFilter>().As<IWordsFilter>().SingleInstance();
         
         builder.Register<SpiralPointGenerator>(ctx =>
         {

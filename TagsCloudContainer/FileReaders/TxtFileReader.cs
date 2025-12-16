@@ -1,7 +1,7 @@
 ﻿using TagsCloudVisualization.Interface;
 using System.IO;
 
-namespace TagsCloudContainer.WorkWithFiles;
+namespace TagsCloudContainer.FileReaders;
 
 public class TxtFileReader : IFileReader
 {

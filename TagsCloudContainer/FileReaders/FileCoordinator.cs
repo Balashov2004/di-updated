@@ -2,7 +2,7 @@
 using System.IO;
 using TagsCloudVisualization.Interface;
 
-namespace TagsCloudContainer.WorkWithFiles;
+namespace TagsCloudContainer.FileReaders;
 
 public class FileCoordinator : IFileReader
 {

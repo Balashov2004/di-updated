@@ -36,6 +36,8 @@
         private System.Windows.Forms.Button btnWordColor;
         private System.Windows.Forms.Label lblContourColor;
         private System.Windows.Forms.Button btnContourColor;
+        private System.Windows.Forms.CheckedListBox clbExcludeParts;
+        private Button btnSelectFont;
 
         private System.Windows.Forms.Label lblExcludeParts;
         private System.Windows.Forms.TextBox txtExcludePartsSpeech;
@@ -158,6 +160,13 @@
             this.txtFontName.Location = new Point(150, yOffset - 3);
             this.txtFontName.Size = new Size(200, 20);
             gbSizeFont.Controls.Add(this.txtFontName);
+            
+            this.btnSelectFont = new System.Windows.Forms.Button();
+            this.btnSelectFont.Text = "Выбрать шрифт...";
+            this.btnSelectFont.Location = new Point(360, yOffset - 5);
+            this.btnSelectFont.Size = new Size(150, 25);
+            this.btnSelectFont.Click += new EventHandler(this.BtnSelectFont_Click); // Подписка на событие
+            gbSizeFont.Controls.Add(this.btnSelectFont);
 
             yOffset += lineHeight;
 
@@ -295,31 +304,34 @@
             gbAlgoColors.Controls.Add(this.numAngle);
 
 
-            // Uруппа Фильтрация
-            yOffset = 480;
-            GroupBox gbFilter = new GroupBox();
-            gbFilter.Text = "4. Фильтрация (POS-теги)";
-            gbFilter.Location = new Point(xOffset, yOffset);
-            gbFilter.Size = new Size(560, 100);
+            int group4YOffset = 480;
+            
+            GroupBox gbFilter = new GroupBox(); 
+            gbFilter.Text = "4. Фильтрация (Части речи)";
+            gbFilter.Location = new Point(xOffset, group4YOffset);
+            gbFilter.Size = new Size(560, 150);
             this.Controls.Add(gbFilter);
 
-            yOffset = 20;
+            int currentY = 20;
 
             this.lblExcludeParts = new System.Windows.Forms.Label();
-            this.lblExcludeParts.Text = "Исключить (через запятую):";
-            this.lblExcludeParts.Location = new Point(10, yOffset);
+            this.lblExcludeParts.Text = "Исключить части речи:";
+            this.lblExcludeParts.Location = new Point(10, currentY);
             this.lblExcludeParts.AutoSize = true;
             gbFilter.Controls.Add(this.lblExcludeParts);
+            
+            currentY += lineHeight;
 
-            this.txtExcludePartsSpeech = new System.Windows.Forms.TextBox();
-            this.txtExcludePartsSpeech.Location = new Point(10, yOffset + 25);
-            this.txtExcludePartsSpeech.Size = new Size(540, 20);
-            gbFilter.Controls.Add(this.txtExcludePartsSpeech);
-
+            this.clbExcludeParts = new System.Windows.Forms.CheckedListBox();
+            this.clbExcludeParts.FormattingEnabled = true;
+            this.clbExcludeParts.Location = new Point(10, currentY);
+            this.clbExcludeParts.Size = new Size(540, 90);
+            gbFilter.Controls.Add(this.clbExcludeParts); 
+            
             // Кнопка генерации
             this.btnGenerate = new System.Windows.Forms.Button();
             this.btnGenerate.Text = "Сгенерировать Облако Тегов";
-            this.btnGenerate.Location = new Point(xOffset, 600);
+            this.btnGenerate.Location = new Point(xOffset, 650);
             this.btnGenerate.Size = new Size(560, 50);
             this.btnGenerate.Click += new EventHandler(this.BtnGenerate_Click);
             this.Controls.Add(this.btnGenerate);

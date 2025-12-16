@@ -1,5 +1,6 @@
 using Autofac;
 using TagsCloudContainer;
+using TagsCloudContainer.DTO;
 using TagsCloudVisualization;
 
 namespace TagCloudGUI;
@@ -21,6 +22,11 @@ public partial class MainForm : Form
         runner = container.Resolve<CloudRunner>();
 
         LoadSettings();
+        
+        if (Path.GetFileName(settings.OutputPath) == "result.png") 
+        {
+            GenerateUniqueOutputPath(Path.GetDirectoryName(settings.OutputPath));
+        }
     }
 
     private void LoadSettings()
@@ -35,12 +41,27 @@ public partial class MainForm : Form
         numPadding.Value = settings.Padding;
         numSpiralDensity.Value = (decimal)settings.SpiralDensity;
         numAngle.Value = (decimal)settings.Angle;
-        
+
         btnBackgroundColor.BackColor = settings.BackgroundColor;
         btnWordColor.BackColor = settings.WordColor;
         btnContourColor.BackColor = settings.ContourColor;
         
-        txtExcludePartsSpeech.Text = string.Join(", ", settings.ExcludePartsSpeech);
+        clbExcludeParts.Items.Clear();
+        foreach (var russianName in PartsSpeech.RussianToTag.Keys)
+        {
+            clbExcludeParts.Items.Add(russianName);
+        }
+
+        for (int i = 0; i < clbExcludeParts.Items.Count; i++)
+        {
+            var russianName = clbExcludeParts.Items[i].ToString();
+            
+            if (PartsSpeech.ToTags.TryGetValue(russianName, out var tag)) 
+            {
+                var isChecked = settings.ExcludePartsSpeech.Contains(tag);
+                clbExcludeParts.SetItemChecked(i, isChecked);
+            }
+        }
     }
     
     private void SaveSettings()
@@ -61,17 +82,25 @@ public partial class MainForm : Form
         settings.WordColor = btnWordColor.BackColor;
         settings.ContourColor = btnContourColor.BackColor;
         
-        settings.ExcludePartsSpeech = txtExcludePartsSpeech.Text
-            .Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-            .Distinct()
-            .ToList();
+        var newExcludeList = new List<string>();
+
+        foreach (var checkedItem in clbExcludeParts.CheckedItems)
+        {
+            var russianName = checkedItem.ToString();
+            
+            if (PartsSpeech.ToTags.TryGetValue(russianName, out var tag))
+            {
+                newExcludeList.Add(tag);
+            }
+        }
+        settings.ExcludePartsSpeech = newExcludeList;
     }
     
     private void BtnSelectWordsFile_Click(object sender, EventArgs e)
     {
         using (OpenFileDialog openFileDialog = new OpenFileDialog())
         {
-            openFileDialog.Filter = "Поддерживаемые файлы (*.txt, *.docx, *.doc)|*.txt;*.docx;*.doc|Все файлы (*.*)|*.*";
+            openFileDialog.Filter = "Поддерживаемые файлы (*.txt, *.docx)|*.txt;*.docx;|Все файлы (*.*)|*.*";
             openFileDialog.Title = "Выберите файл для анализа";
             
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -85,13 +114,26 @@ public partial class MainForm : Form
     {
         using (SaveFileDialog saveFileDialog = new SaveFileDialog())
         {
-            saveFileDialog.Filter = "PNG Image (*.png)|*.png|";
+            saveFileDialog.Filter = "PNG Image (*.png)|*.png";
             saveFileDialog.Title = "Укажите путь для сохранения облака";
+            
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(settings.OutputPath);
             saveFileDialog.FileName = Path.GetFileName(settings.OutputPath);
             
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                txtOutputPath.Text = saveFileDialog.FileName;
+                var selectedPath = saveFileDialog.FileName;
+                
+                if (Path.GetExtension(selectedPath).Equals(".png", StringComparison.OrdinalIgnoreCase))
+                {
+                    settings.OutputPath = selectedPath;
+                }
+                else
+                {
+                    GenerateUniqueOutputPath(Path.GetDirectoryName(selectedPath));
+                }
+                
+                txtOutputPath.Text = settings.OutputPath;
             }
         }
     }
@@ -120,4 +162,36 @@ public partial class MainForm : Form
             ((Button)sender).BackColor = colorDialog.Color;
         }
     }
+    
+    private void BtnSelectFont_Click(object sender, EventArgs e)
+    {
+        using (FontDialog fontDialog = new FontDialog())
+        {
+            try
+            {
+                fontDialog.Font = new Font(settings.FontName, settings.MinFontSize); 
+            }
+            catch
+            {
+                fontDialog.Font = new Font(FontFamily.GenericSansSerif, 12);
+            }
+
+            if (fontDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.FontName = fontDialog.Font.Name;
+                txtFontName.Text = fontDialog.Font.Name;
+            }
+        }
+    }
+    
+    private void GenerateUniqueOutputPath(string directory)
+    {
+        Directory.CreateDirectory(directory);
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        var fileName = $"TagCloud_{timestamp}.png";
+        
+        settings.OutputPath = Path.Combine(directory, fileName);
+        txtOutputPath.Text = settings.OutputPath;
+    }
+    
 }

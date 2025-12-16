@@ -12,8 +12,15 @@ public class AppSettings
     public int MaxFontSize { get; set; } = 48;
     public int Padding { get; set; } = 2;
     public double SpiralDensity { get; set; } = 0.1;
-    public string OutputPath { get; set; } = "./results/result.png";
-    public string WordsFilePath { get; set; } = "./resurses/Words.txt";
+    public string OutputPath { get; set; } = 
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
+            "TagCloudResults", 
+            "result.png"
+        );
+    public string WordsFilePath { get; set; } = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+        );
     public Color BackgroundColor { get; set; } = Color.White;
     public Color WordColor { get; set; } = Color.BurlyWood;
     public Color ContourColor { get; set; } = Color.Black;
