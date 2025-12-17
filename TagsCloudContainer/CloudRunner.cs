@@ -11,25 +11,26 @@ public class CloudRunner
     private readonly TextProcessor textProcessor;
     private readonly AppSettings appSettings;
     private readonly CloudPainter cloudPainter;
-    private readonly IFileReader fileReader;
+    private readonly IFileReaderFactory readerFactory;
     
     public CloudRunner(
         AppSettings appSettings, 
         CircularCloudLayouter layouter, 
         TextProcessor textProcessor,
         CloudPainter cloudPainter,
-        IFileReader fileReader)
+        IFileReaderFactory readerFactory)
     {
         this.appSettings = appSettings;
         this.layouter = layouter;
         this.textProcessor = textProcessor;
         this.cloudPainter = cloudPainter;
-        this.fileReader = fileReader;
+        this.readerFactory = readerFactory;
     }
 
     public void Run()
     {
-        var text = fileReader.ReadAllText(appSettings.WordsFilePath);
+        var reader = readerFactory.GetReader(appSettings.WordsFilePath);
+        var text = reader.ReadAllText(appSettings.WordsFilePath);
         textProcessor.Process(text);
         var placesWords = textProcessor.ProcessWords;
 

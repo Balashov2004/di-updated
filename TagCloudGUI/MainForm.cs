@@ -140,10 +140,18 @@ public partial class MainForm : Form
     
     private void BtnGenerate_Click(object sender, EventArgs e)
     {
+        SaveSettings();
+        var validator = new SettingsValidator();
+        var errors = validator.Validate(settings);
+        if (errors.Any())
+        {
+            var errorMessage = string.Join("\n", errors.Select(err => "- " + err));
+            MessageBox.Show("Ошибки:\n" + errorMessage, 
+                "Ошибка валидации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
         try
         {
-            SaveSettings();
-
             runner.Run(); 
 
             MessageBox.Show($"Облако тегов создано и сохранено в: {settings.OutputPath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);

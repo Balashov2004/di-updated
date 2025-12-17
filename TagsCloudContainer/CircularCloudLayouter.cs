@@ -28,10 +28,6 @@ public class CircularCloudLayouter
         {
             var topLeft = CalculateTopLeft(pointGenerator.Center, rectangleSize);
             var centerRect = new Rectangle(topLeft.X, topLeft.Y, rectangleSize.Width, rectangleSize.Height);
-            if (!IsWithinImageBounds(centerRect))
-            {
-                throw new InvalidOperationException($"Прямоугольник не помещается в изображение.");
-            }
             placedRectangles.Add(centerRect);
             AddRectangleToGrid(centerRect);
             return centerRect;
@@ -44,8 +40,6 @@ public class CircularCloudLayouter
 
             if (!IsIntersection(potentialRect))
             {
-                if (!IsWithinImageBounds(potentialRect))
-                    throw new InvalidOperationException($"Прямоугольник не помещается в изображение.");
                 AddRectangleToGrid(potentialRect);
                 var compactedRect = CompactRectangle(potentialRect);
                 placedRectangles.Add(compactedRect);
@@ -55,7 +49,7 @@ public class CircularCloudLayouter
         
         throw new InvalidOperationException("Не удалось найти место для прямоугольника.");
     }
-
+    
     private bool IsIntersection(Rectangle newRectangle)
     {
         var rectWithIndentation = AddIndentation(newRectangle, appSettings.Padding);

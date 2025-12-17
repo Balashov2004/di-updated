@@ -4,23 +4,24 @@ using TagsCloudVisualization.Interface;
 
 namespace TagsCloudContainer.FileReaders;
 
-public class FileCoordinator : IFileReader
+public class FileReaderFactory : IFileReaderFactory
 {
     private readonly IIndex<string, IFileReader> readers;
-    
-    public FileCoordinator(IIndex<string, IFileReader> readers)
+
+    public FileReaderFactory(IIndex<string, IFileReader> readers)
     {
         this.readers = readers;
     }
-    public string ReadAllText(string filePath)
+
+    public IFileReader GetReader(string filePath)
     {
         var extension = Path.GetExtension(filePath).ToLowerInvariant();
-        
+
         if (readers.TryGetValue(extension, out var reader))
         {
-            return reader.ReadAllText(filePath);
+            return reader;
         }
-            
+
         throw new NotSupportedException($"Расширение '{extension}' не поддерживается.");
     }
 }

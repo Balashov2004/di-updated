@@ -2,6 +2,7 @@
 using System.Drawing;
 using TagsCloudContainer;
 using TagsCloudContainer.FileReaders;
+using TagsCloudContainer.Mystem;
 using TagsCloudVisualization.Interface;
 
 namespace TagsCloudVisualization;
@@ -16,9 +17,11 @@ public class CompositionRoot : Module
         builder.RegisterType<TextProcessor>().AsSelf();
         builder.RegisterType<CloudPainter>().AsSelf();
         builder.RegisterType<CloudRunner>().AsSelf();
+        builder.RegisterType<FileReaderFactory>().As<IFileReaderFactory>().SingleInstance();
+        builder.RegisterType<MystemRunner>().As<IMystemRunner>().SingleInstance();
+        builder.RegisterType<MystemParser>().As<IMystemParser>().SingleInstance();
         builder.RegisterType<TxtFileReader>().Keyed<IFileReader>(".txt");
         builder.RegisterType<DocxFileReader>().Keyed<IFileReader>(".docx");
-        builder.RegisterType<FileCoordinator>().As<IFileReader>();
         builder.RegisterType<WordsFilter>().As<IWordsFilter>().SingleInstance();
         
         builder.Register<SpiralPointGenerator>(ctx =>

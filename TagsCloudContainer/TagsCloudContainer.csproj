@@ -13,13 +13,16 @@
         <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
         <PackageReference Include="WeCantSpell.Hunspell" Version="5.0.0" />
         <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
-        <None Update="resources\mystem.exe">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="results\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Mystem\mystem.exe">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
