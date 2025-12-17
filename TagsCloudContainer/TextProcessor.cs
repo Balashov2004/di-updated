@@ -9,7 +9,7 @@ namespace TagsCloudContainer;
 public class TextProcessor
 {
     private readonly AppSettings appSettings;
-    public List<WordData> ProcessWords { get; private set; } = new List<WordData>();
+    public List<WordData> ProcessWords { get; } = new();
     private readonly IWordsFilter wordsFilter;
 
     public TextProcessor(AppSettings appSettings, IWordsFilter wordsFilter)

@@ -5,30 +5,29 @@ namespace TagsCloudContainer;
 
 public class CircularCloudLayouter
 {
-    private readonly List<Rectangle> placedRectangles = new();
     private readonly IPointGenerator pointGenerator;
     private readonly AppSettings appSettings;
-    private readonly Dictionary<Point, List<Rectangle>> grid = new Dictionary<Point, List<Rectangle>>();
+    private readonly Dictionary<Point, List<Rectangle>> grid = new();
     private readonly int gridSize;
-    public List<Rectangle> PlacedRectangles => placedRectangles;
-    
+    public List<Rectangle> PlacedRectangles { get; } = new();
+
 
     public CircularCloudLayouter(AppSettings appSettings,  IPointGenerator pointGenerator)
     {
         this.appSettings = appSettings;
         this.pointGenerator = pointGenerator;
         gridSize = appSettings.MaxFontSize;
-        placedRectangles.Clear();
+        PlacedRectangles.Clear();
         grid.Clear();
     }
 
     public Rectangle PutNextRectangle(Size rectangleSize)
     {
-        if (placedRectangles.Count == 0)
+        if (PlacedRectangles.Count == 0)
         {
             var topLeft = CalculateTopLeft(pointGenerator.Center, rectangleSize);
             var centerRect = new Rectangle(topLeft.X, topLeft.Y, rectangleSize.Width, rectangleSize.Height);
-            placedRectangles.Add(centerRect);
+            PlacedRectangles.Add(centerRect);
             AddRectangleToGrid(centerRect);
             return centerRect;
         }
@@ -42,7 +41,7 @@ public class CircularCloudLayouter
             {
                 AddRectangleToGrid(potentialRect);
                 var compactedRect = CompactRectangle(potentialRect);
-                placedRectangles.Add(compactedRect);
+                PlacedRectangles.Add(compactedRect);
                 return compactedRect;
             }
         }

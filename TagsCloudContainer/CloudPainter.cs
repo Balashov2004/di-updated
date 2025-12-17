@@ -16,12 +16,12 @@ public class CloudPainter
 
     private Bitmap DrawCloud(List<WordData> placedWords)
     {
-        int minX = placedWords.Min(w => w.Placement.Left);
-        int maxX = placedWords.Max(w => w.Placement.Right);
-        int minY = placedWords.Min(w => w.Placement.Top);
-        int maxY = placedWords.Max(w => w.Placement.Bottom);
-        int width = Math.Max(appSettings.ImageSize.Width, (maxX - minX) + 40);
-        int height = Math.Max(appSettings.ImageSize.Height, (maxY - minY) + 40);
+        var minX = placedWords.Min(w => w.Placement.Left);
+        var maxX = placedWords.Max(w => w.Placement.Right);
+        var minY = placedWords.Min(w => w.Placement.Top);
+        var maxY = placedWords.Max(w => w.Placement.Bottom);
+        var width = Math.Max(appSettings.ImageSize.Width, (maxX - minX) + 40);
+        var height = Math.Max(appSettings.ImageSize.Height, (maxY - minY) + 40);
         
         var bitmap = new Bitmap(width, height);
         using var graphics = Graphics.FromImage(bitmap);
