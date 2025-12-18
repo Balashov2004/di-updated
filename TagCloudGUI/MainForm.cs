@@ -9,6 +9,7 @@ public partial class MainForm : Form
 {
     private AppSettings settings;
     private CloudRunner runner;
+    private IContainer container;
     
     public MainForm()
     {
@@ -18,8 +19,7 @@ public partial class MainForm : Form
         var builder = new ContainerBuilder();
         builder.RegisterModule(new CompositionRoot());
         builder.RegisterInstance(settings).AsSelf().SingleInstance();
-        var container = builder.Build();
-        runner = container.Resolve<CloudRunner>();
+        container = builder.Build();
 
         LoadSettings();
         
@@ -152,13 +152,17 @@ public partial class MainForm : Form
         }
         try
         {
-            runner.Run(); 
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var freshRunner = scope.Resolve<CloudRunner>();
+                freshRunner.Run();
+            }
 
-            MessageBox.Show($"Облако тегов создано и сохранено в: {settings.OutputPath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Облако успешно создано!");
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при генерации: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"Ошибка: {ex.Message}");
         }
     }
     
