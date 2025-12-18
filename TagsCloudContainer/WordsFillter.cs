@@ -39,7 +39,7 @@ public class WordsFilter : IWordsFilter
         var grammar = analysisList[index].WordAnalyses[0].Grammar?.ToUpperInvariant();
         if (string.IsNullOrEmpty(grammar)) return false;
 
-        // Извлекаем чистый тэг (S, V, ADV и т.д.)
+        
         var partOfSpeech = grammar.Split('=', ',', '|')[0].Trim();
         
         return settings.ExcludePartsSpeech.Contains(partOfSpeech);
