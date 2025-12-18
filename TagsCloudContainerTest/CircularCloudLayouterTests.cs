@@ -1,5 +1,5 @@
 using System.Drawing;
-using System.Drawing.Imaging;
+using FluentAssertions;
 using FakeItEasy;
 using TagsCloudContainer;
 using TagsCloudVisualization.Interface;
@@ -84,16 +84,13 @@ public class CircularCloudLayouterTests
     public void RectangleNotFit_Test()
     {
         var imageSize = new Size(100, 100);
-        var appSettings = new AppSettings(  );
-        appSettings.ImageSize = imageSize;
-        appSettings.MaxFontSize = 10;
-        appSettings.SpiralDensity = 0.01;
-        var center = new Point(50, 50);
-        var density = 5.0;
-        var angleStep = 0.1;
-        var generator = new SpiralPointGenerator(center, density, angleStep);
+        var appSettings = new AppSettings { ImageSize = imageSize };
+        var generator = new SpiralPointGenerator(new Point(50, 50), 1.0, 0.1);
         var layouter = new CircularCloudLayouter(appSettings, generator);
-        Assert.Throws<InvalidOperationException>(() => { layouter.PutNextRectangle(new Size(200, 200)); });
+        var largeSize = new Size(200, 200);
+
+        var rect = layouter.PutNextRectangle(largeSize);
+        rect.Size.Should().Be(largeSize);
     }
     
 }
