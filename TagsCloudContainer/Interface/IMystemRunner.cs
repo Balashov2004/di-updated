@@ -1,6 +1,8 @@
-﻿namespace TagsCloudVisualization.Interface;
+﻿using TagsCloudContainer;
+
+namespace TagsCloudVisualization.Interface;
 
 public interface IMystemRunner
 {
-    string GetAnalysisJson(string input);
+    Result<string> GetAnalysisJson(string input);
 }

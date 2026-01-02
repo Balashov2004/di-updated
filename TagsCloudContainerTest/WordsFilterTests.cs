@@ -39,14 +39,14 @@ public class WordsFilterTests
             }
         };
 
-        A.CallTo(() => fakeRunner.GetAnalysisJson(A<string>._)).Returns("fake_json");
+        A.CallTo(() => fakeRunner.GetAnalysisJson(A<string>._)).Returns(Result<string>.Success("fake_json"));
         A.CallTo(() => fakeParser.Parse("fake_json")).Returns(fakeAnalysis);
 
         var filter = new WordsFilter(settings, fakeRunner, fakeParser);
         var result = filter.ApplyFilter(words);
-        result.Should().HaveCount(1);
-        result.Should().Contain("бежать");
-        result.Should().NotContain("дом");
+        result.Value.Should().HaveCount(1);
+        result.Value.Should().Contain("бежать");
+        result.Value.Should().NotContain("дом");
     }
 
     [Test]
@@ -62,7 +62,7 @@ public class WordsFilterTests
         var filter = new WordsFilter(settings, fakeRunner, fakeParser);
         var result = filter.ApplyFilter(words);
         
-        result.Should().Contain("ааа");
+        result.Value.Should().Contain("ааа");
     }
 
     [Test]

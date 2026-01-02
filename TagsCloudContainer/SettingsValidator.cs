@@ -2,7 +2,7 @@
 
 public class SettingsValidator
 {
-    public List<string> Validate(AppSettings settings)
+    public Result<bool> Validate(AppSettings settings)
     {
         var errors = new List<string>();
 
@@ -29,6 +29,12 @@ public class SettingsValidator
         if (string.IsNullOrWhiteSpace(settings.FontName))
             errors.Add("Имя шрифта не указано.");
 
-        return errors;
+        if (errors.Count > 0)
+        {
+            var combinedError = "Обнаружены ошибки в настройках:\n" + string.Join("\n", errors.Select(e => "- " + e));
+            return Result<bool>.Failure(combinedError);
+        }
+
+        return Result<bool>.Success(true);
     }
 }

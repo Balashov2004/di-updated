@@ -38,7 +38,7 @@ public class SettingsValidatorTests
     public void WhenSettingsAreCorrect_Test()
     {
         var errors = validator.Validate(settings);
-        errors.Should().BeEmpty();
+        errors.ErrorMessage.Should().BeNull();
     }
 
     [Test]
@@ -46,7 +46,7 @@ public class SettingsValidatorTests
     {
         settings.WordsFilePath = "non_existent.txt";
         var errors = validator.Validate(settings);
-        errors.Should().Contain(e => e.Contains("файл не найден"));
+        errors.ErrorMessage.Should().Contain("файл не найден");
     }
 
     [Test]
@@ -56,7 +56,7 @@ public class SettingsValidatorTests
         settings.MaxFontSize = 20;
 
         var errors = validator.Validate(settings);
-        errors.Should().Contain(e => e.Contains("Максимальный размер шрифта должен быть больше минимального"));
+        errors.ErrorMessage.Should().Contain("Максимальный размер шрифта должен быть больше минимального");
     }
 
     [TestCase(0)]
@@ -65,7 +65,7 @@ public class SettingsValidatorTests
     {
         settings.ImageSize = new Size(size, size);
         var errors = validator.Validate(settings);
-        errors.Should().Contain(e => e.Contains("больше 100x100"));
+        errors.ErrorMessage.Should().Contain("больше 100x100");
     }
 
     [Test]
@@ -73,6 +73,6 @@ public class SettingsValidatorTests
     {
         settings.FontName = "";
         var errors = validator.Validate(settings);
-        errors.Should().Contain("Имя шрифта не указано.");
+        errors.ErrorMessage.Should().Contain("Имя шрифта не указано.");
     }
 }

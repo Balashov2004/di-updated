@@ -7,7 +7,7 @@ public class CircularCloudLayouter
 {
     private readonly IPointGenerator pointGenerator;
     private readonly AppSettings appSettings;
-    private readonly Dictionary<Point, List<Rectangle>> grid = new();
+    private readonly Dictionary<Point, List<Rectangle>?> grid = new();
     private readonly int gridSize;
     public List<Rectangle> PlacedRectangles { get; } = new();
 
@@ -130,7 +130,7 @@ public class CircularCloudLayouter
         
         while (true) 
         {
-            var nextRect = new Rectangle(currentRect.X + stepX, currentRect.Y, currentRect.Width, currentRect.Height);
+            var nextRect = currentRect with { X = currentRect.X + stepX };
             if (IsIntersection(nextRect))
                 break; 
             
@@ -146,7 +146,7 @@ public class CircularCloudLayouter
         
         while (true)
         {
-            var nextRect = new Rectangle(currentRect.X, currentRect.Y + stepY, currentRect.Width, currentRect.Height);
+            var nextRect = currentRect with { Y = currentRect.Y + stepY };
             if (IsIntersection(nextRect))
                 break; 
         
@@ -162,14 +162,4 @@ public class CircularCloudLayouter
 
         return currentRect;
     }
-    
-    private bool IsWithinImageBounds(Rectangle rect)
-    {
-        var w = appSettings.ImageSize.Width;
-        var h = appSettings.ImageSize.Height;
-        
-        return rect.Left >= 0 && rect.Right <= w &&
-               rect.Top >= 0 && rect.Bottom <= h;
-    }
-    
 }

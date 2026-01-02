@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using TagsCloudContainer.DTO;
+﻿using TagsCloudContainer.DTO;
 using TagsCloudVisualization.Interface;
 
 
@@ -20,15 +17,19 @@ public class WordsFilter : IWordsFilter
         this.parser = parser;
     }
 
-    public List<string> ApplyFilter(List<string> words)
+    public Result<List<string>> ApplyFilter(List<string> words)
     {
         var inputWords = string.Join(" ", words.Select(w => w.ToLower()));
-        var json = runner.GetAnalysisJson(inputWords);
-        var analysisList = parser.Parse(json);
-
-        return words
+        var result = runner.GetAnalysisJson(inputWords);
+        if (!result.IsSuccess)
+            return Result<List<string>>.Failure(result.ErrorMessage);
+        var analysisList = parser.Parse(result.Value);
+        
+        var filtered = words
             .Where((word, index) => !IsBoring(index, analysisList))
             .ToList();
+        
+        return Result<List<string>>.Success(filtered);
     }
 
     private bool IsBoring(int index, List<TextMystem> analysisList)

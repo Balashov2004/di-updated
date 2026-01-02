@@ -27,20 +27,24 @@ public class CloudRunner
         this.readerFactory = readerFactory;
     }
 
-    public void Run()
+    public Result<string> Run()
     {
-        var reader = readerFactory.GetReader(appSettings.WordsFilePath);
-        var text = reader.ReadAllText(appSettings.WordsFilePath);
-        textProcessor.Process(text);
-        var placesWords = textProcessor.ProcessWords;
+        var readerResult = readerFactory.GetReader(appSettings.WordsFilePath);
+        if (!readerResult.IsSuccess)
+            return Result<string>.Failure(readerResult.ErrorMessage);
+        var text = readerResult.Value.ReadAllText(appSettings.WordsFilePath);
+        var result = textProcessor.Process(text);
+        if (!result.IsSuccess) return Result<string>.Failure(result.ErrorMessage);
+        
+        var placesWords = result.Value;
 
         foreach (var wordData in placesWords)
         {
             var rectSize = wordData.Size;
-            
             var rect = layouter.PutNextRectangle(rectSize);
             wordData.SetPlacement(rect); 
         }
         cloudPainter.SaveImage(placesWords, appSettings.OutputPath, ImageFormat.Png);
+        return Result<string>.Success(appSettings.OutputPath);
     }
 }

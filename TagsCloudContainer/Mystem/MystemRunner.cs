@@ -8,10 +8,10 @@ public class MystemRunner : IMystemRunner
 {
     private const string MystemPath = "./Mystem/mystem.exe";
 
-    public string GetAnalysisJson(string input)
+    public Result<string> GetAnalysisJson(string input)
     {
         if (!File.Exists(MystemPath))
-            throw new FileNotFoundException($"Mystem не найден: {MystemPath}");
+            return Result<string>.Failure($"MyStem не найден");
 
         using var process = new Process
         {
@@ -21,6 +21,7 @@ public class MystemRunner : IMystemRunner
                 Arguments = "-i --eng-gr --format json",
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 StandardInputEncoding = Encoding.UTF8,
@@ -30,6 +31,12 @@ public class MystemRunner : IMystemRunner
         process.Start();
         process.StandardInput.WriteLine(input);
         process.StandardInput.Close();
-        return process.StandardOutput.ReadToEnd();
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
+            return Result<string>.Failure($"MyStem завершился с ошибкой: {error}");
+
+        return Result<string>.Success(output);
     }
 }

@@ -1,15 +1,8 @@
 ﻿namespace TagsCloudContainer.DTO;
 
-public class WordStat
+public class WordStat(Dictionary<string, int> wordCounts, int maxCount, int minCount)
 {
-    public Dictionary<string, int> WordCounts { get; }
-    public int MaxCount { get; }
-    public int MinCount { get; }
-
-    public WordStat(Dictionary<string, int> wordCounts, int maxCount, int minCount)
-    {
-        WordCounts = wordCounts;
-        MaxCount = maxCount;
-        MinCount = minCount;
-    }
+    public Dictionary<string, int> WordCounts { get; } = wordCounts;
+    public int MaxCount { get; } = maxCount;
+    public int MinCount { get; } = minCount;
 }

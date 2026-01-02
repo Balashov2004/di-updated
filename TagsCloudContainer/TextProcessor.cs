@@ -18,32 +18,45 @@ public class TextProcessor
         this.wordsFilter = wordsFilter;
     }
 
-    public void Process(string text)
+    public Result<List<WordData>> Process(string text)
     {
-        var stats = GetWordStat(text);
-        var max = stats.MaxCount;
-        var min = stats.MinCount;
+        ProcessWords.Clear();
+        var statsResult = GetWordStat(text);
+        
+        if (!statsResult.IsSuccess)
+            return Result<List<WordData>>.Failure(statsResult.ErrorMessage);
+        
+        var stats = statsResult.Value;
+        
+        if (stats.WordCounts.Count == 0)
+            return Result<List<WordData>>.Failure("После фильтрации не осталось слов для отрисовки.");
+
         foreach (var pair in stats.WordCounts)
         {
-            ProcessWords.Add(CreateWordData(pair.Key, pair.Value, min, max));
+            ProcessWords.Add(CreateWordData(pair.Key, pair.Value, stats.MinCount, stats.MaxCount));
         }
+
+        return Result<List<WordData>>.Success(ProcessWords);
     }
 
-    private WordStat GetWordStat(string text)
+    private Result<WordStat> GetWordStat(string text)
     {
         const string delimitersPattern = @"[\W_]+";
         var words = Regex.Split(text, delimitersPattern, RegexOptions.IgnoreCase)
             .Where(w => !string.IsNullOrWhiteSpace(w))
             .Select(w => w.ToLowerInvariant())
             .ToList();
-        var afterFilterWords = wordsFilter.ApplyFilter(words);
+        var filterResult = wordsFilter.ApplyFilter(words);
+        if (!filterResult.IsSuccess)
+            return Result<WordStat>.Failure(filterResult.ErrorMessage);
         
-        var wordCounts = afterFilterWords
+        var wordCounts = filterResult.Value
             .GroupBy(w => w)
             .ToDictionary(g => g.Key, g => g.Count());
         var maxCount = wordCounts.Values.DefaultIfEmpty(0).Max();
         var minCount = wordCounts.Values.DefaultIfEmpty(0).Min();
-        return new WordStat(wordCounts, maxCount, minCount);
+        
+        return Result<WordStat>.Success(new WordStat(wordCounts,  maxCount, minCount));
     }
     
     private WordData CreateWordData(string word, int count, int minCount,  int maxCount)

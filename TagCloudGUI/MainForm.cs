@@ -142,27 +142,26 @@ public partial class MainForm : Form
     {
         SaveSettings();
         var validator = new SettingsValidator();
-        var errors = validator.Validate(settings);
-        if (errors.Any())
+        var validatorResult = validator.Validate(settings);
+        if (!validatorResult.IsSuccess)
         {
-            var errorMessage = string.Join("\n", errors.Select(err => "- " + err));
-            MessageBox.Show("Ошибки:\n" + errorMessage, 
+            MessageBox.Show(validatorResult.ErrorMessage, 
                 "Ошибка валидации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
-        try
+        using (var scope = container.BeginLifetimeScope())
         {
-            using (var scope = container.BeginLifetimeScope())
+            var runner = scope.Resolve<CloudRunner>();
+            var result = runner.Run();
+            
+            if (result.IsSuccess)
             {
-                var freshRunner = scope.Resolve<CloudRunner>();
-                freshRunner.Run();
+                MessageBox.Show($"Облако сохранено: {result.Value}");
             }
-
-            MessageBox.Show($"Облако успешно создано!");
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка: {ex.Message}");
+            else
+            {
+                MessageBox.Show(result.ErrorMessage, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
     

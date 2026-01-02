@@ -23,8 +23,10 @@ public class TextProcessorTests
         fakeReader = A.Fake<IFileReader>();
         A.CallTo(() => fakeFilter.ApplyFilter(A<List<string>>.Ignored))
             .ReturnsLazily((List<string> rawWords) => 
-                rawWords.Select(w => w.ToLowerInvariant()).ToList()
-            );
+            {
+                var filtered = rawWords.Select(w => w.ToLowerInvariant()).ToList();
+                return Result<List<string>>.Success(filtered);
+            });
     }
     
     [Test]

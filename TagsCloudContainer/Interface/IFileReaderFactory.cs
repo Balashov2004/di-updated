@@ -1,6 +1,8 @@
-﻿namespace TagsCloudVisualization.Interface;
+﻿using TagsCloudContainer;
+
+namespace TagsCloudVisualization.Interface;
 
 public interface IFileReaderFactory
 {
-    IFileReader GetReader(string filePath);
+    Result<IFileReader> GetReader(string filePath);
 }

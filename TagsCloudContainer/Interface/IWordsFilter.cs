@@ -1,6 +1,8 @@
-﻿namespace TagsCloudVisualization.Interface;
+﻿using TagsCloudContainer;
+
+namespace TagsCloudVisualization.Interface;
 
 public interface IWordsFilter
 {
-    List<string> ApplyFilter(List<string> words);
+    Result<List<string>> ApplyFilter(List<string> words);
 }

@@ -13,15 +13,15 @@ public class FileReaderFactory : IFileReaderFactory
         this.readers = readers;
     }
 
-    public IFileReader GetReader(string filePath)
+    public Result<IFileReader> GetReader(string filePath)
     {
         var extension = Path.GetExtension(filePath).ToLowerInvariant();
 
         if (readers.TryGetValue(extension, out var reader))
         {
-            return reader;
+            return Result<IFileReader>.Success(reader);
         }
 
-        throw new NotSupportedException($"Расширение '{extension}' не поддерживается.");
+        return Result<IFileReader>.Failure($"Расширение '{extension}' не поддерживается.");
     }
 }

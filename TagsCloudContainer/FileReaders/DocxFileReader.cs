@@ -11,7 +11,7 @@ public class DocxFileReader : IFileReader
     {
         using (WordprocessingDocument doc = WordprocessingDocument.Open(filePath, true))
         {
-            var body = doc.MainDocumentPart.Document.Body;
+            var body = doc.MainDocumentPart?.Document.Body;
             var sb = new StringBuilder();
 
             foreach (var part in body) sb.Append(part.InnerText + '\n');
